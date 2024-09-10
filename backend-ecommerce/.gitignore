@@ -1,0 +1,20 @@
+.vs/
+
+## DotNetEnv
+.env
+
+## Build results
+**/bin/
+**/obj/
+**/TestResults/
+
+## ASP.NET
+*.dbmdl
+*.pdb
+*.cache
+*.exe
+*.dll
+*.log
+*.xml
+*.suo
+*.user

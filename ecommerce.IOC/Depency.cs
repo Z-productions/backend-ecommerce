@@ -1,4 +1,7 @@
-﻿using ecommerce.MODEL;
+﻿using ecommerce.DAL.Repository;
+using ecommerce.DAL.Repository.Contrato;
+using ecommerce.MODEL;
+using ecommerce.UTILIY;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -27,6 +30,12 @@ namespace ecommerce.IOC
             {
                 options.UseSqlServer(connectionString);
             });
+
+
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddAutoMapper(typeof(AutoMapperProfile));
         }
     }
 }

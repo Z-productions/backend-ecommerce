@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -10,6 +10,12 @@
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ecommerce.BLL\ecommerce.BLL.csproj" />
+    <ProjectReference Include="..\ecommerce.DTO\ecommerce.DTO.csproj" />
+    <ProjectReference Include="..\ecommerce.IOC\ecommerce.IOC.csproj" />
   </ItemGroup>
 
 </Project>

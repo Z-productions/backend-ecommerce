@@ -1,0 +1,15 @@
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\bin\Debug\net8.0\ecommerce.MODEL.deps.json
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\bin\Debug\net8.0\ecommerce.MODEL.runtimeconfig.json
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\bin\Debug\net8.0\ecommerce.MODEL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\bin\Debug\net8.0\ecommerce.MODEL.pdb
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.csproj.AssemblyReference.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.AssemblyInfoInputs.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.AssemblyInfo.cs
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.csproj.CoreCompileInputs.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.sourcelink.json
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\refint\ecommerce.MODEL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.pdb
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ecommerce.MODEL.genruntimeconfig.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.MODEL\obj\Debug\net8.0\ref\ecommerce.MODEL.dll

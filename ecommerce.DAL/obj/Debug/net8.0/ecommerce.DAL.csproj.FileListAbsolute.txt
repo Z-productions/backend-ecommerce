@@ -1,0 +1,16 @@
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\bin\Debug\net8.0\ecommerce.DAL.deps.json
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\bin\Debug\net8.0\ecommerce.DAL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\bin\Debug\net8.0\ecommerce.DAL.pdb
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.AssemblyInfoInputs.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.AssemblyInfo.cs
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.csproj.CoreCompileInputs.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.sourcelink.json
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\refint\ecommerce.DAL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.pdb
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ref\ecommerce.DAL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\bin\Debug\net8.0\ecommerce.MODEL.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\bin\Debug\net8.0\ecommerce.MODEL.pdb
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerce.DAL.csproj.AssemblyReference.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DAL\obj\Debug\net8.0\ecommerc.467DF1B5.Up2Date

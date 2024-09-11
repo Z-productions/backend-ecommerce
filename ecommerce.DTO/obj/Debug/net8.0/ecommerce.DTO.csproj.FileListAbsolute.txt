@@ -1,0 +1,12 @@
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\bin\Debug\net8.0\ecommerce.DTO.deps.json
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\bin\Debug\net8.0\ecommerce.DTO.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\bin\Debug\net8.0\ecommerce.DTO.pdb
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ecommerce.DTO.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ecommerce.DTO.AssemblyInfoInputs.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ecommerce.DTO.AssemblyInfo.cs
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ecommerce.DTO.csproj.CoreCompileInputs.cache
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ecommerce.DTO.sourcelink.json
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ecommerce.DTO.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\refint\ecommerce.DTO.dll
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ecommerce.DTO.pdb
+C:\Users\FABIO\Desktop\backend-ecommerce\ecommerce.DTO\obj\Debug\net8.0\ref\ecommerce.DTO.dll

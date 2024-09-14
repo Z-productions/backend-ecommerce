@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using ecommerce.MODEL;
 
-namespace ecommerce.MODEL;
+namespace ecommerce.DAL;
 
 public partial class EcommerceContext : DbContext
 {
@@ -14,8 +13,6 @@ public partial class EcommerceContext : DbContext
         : base(options)
     {
     }
-
-    public virtual DbSet<AppAuthority> AppAuthorities { get; set; }
 
     public virtual DbSet<Buyer> Buyers { get; set; }
 
@@ -36,23 +33,11 @@ public partial class EcommerceContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-L7424KU\\SQLEXPRESS;Database=ecommerce;User Id=kevin;Password=123;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AppAuthority>(entity =>
-        {
-            entity.HasKey(e => e.Name).HasName("app_authority_pkey");
-
-            entity.ToTable("app_authority");
-
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("name");
-        });
-
         modelBuilder.Entity<Buyer>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("comprador_pkey");
@@ -142,7 +127,7 @@ public partial class EcommerceContext : DbContext
             entity.HasOne(d => d.Buyer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.BuyerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_pedido_comprador_id");
+                .HasConstraintName("fk_pedido_buyer_id");
         });
 
         modelBuilder.Entity<Payment>(entity =>
@@ -177,6 +162,14 @@ public partial class EcommerceContext : DbContext
             entity.ToTable("product");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Brand)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("brand");
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("code");
             entity.Property(e => e.Description)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -185,9 +178,13 @@ public partial class EcommerceContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.Priece).HasColumnName("priece");
+            entity.Property(e => e.Price).HasColumnName("price");
             entity.Property(e => e.SellerId).HasColumnName("seller_id");
             entity.Property(e => e.Stock).HasColumnName("stock");
+            entity.Property(e => e.UrlImage)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("url_image");
 
             entity.HasOne(d => d.Seller).WithMany(p => p.Products)
                 .HasForeignKey(d => d.SellerId)
@@ -216,7 +213,7 @@ public partial class EcommerceContext : DbContext
             entity.HasOne(d => d.Seller).WithMany(p => p.Remunerations)
                 .HasForeignKey(d => d.SellerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_remuneracion_vendedor_id");
+                .HasConstraintName("fk_remuneracion_seller_id");
         });
 
         modelBuilder.Entity<Seller>(entity =>
@@ -290,28 +287,6 @@ public partial class EcommerceContext : DbContext
                 .HasMaxLength(60)
                 .IsUnicode(false)
                 .HasColumnName("password");
-
-            entity.HasMany(d => d.AuthorityNames).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserAuthority",
-                    r => r.HasOne<AppAuthority>().WithMany()
-                        .HasForeignKey("AuthorityName")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_authority_name"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("fk_user_id"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "AuthorityName").HasName("app_user_authority_pkey");
-                        j.ToTable("user_authority");
-                        j.IndexerProperty<long>("UserId").HasColumnName("user_id");
-                        j.IndexerProperty<string>("AuthorityName")
-                            .HasMaxLength(50)
-                            .IsUnicode(false)
-                            .HasColumnName("authority_name");
-                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

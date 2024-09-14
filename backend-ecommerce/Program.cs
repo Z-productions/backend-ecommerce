@@ -1,5 +1,8 @@
 using DotNetEnv;
+using ecommerce.DAL.Repository;
+using ecommerce.DAL.Repository.Contrato;
 using ecommerce.IOC;
+using ecommerce.UTILIY;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 // Inyeccion dependecia acorde con la dependencia 
 builder.Services.InyectionDependecy();
+ 
 
 
 var app = builder.Build();

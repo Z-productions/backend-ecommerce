@@ -24,6 +24,4 @@ public partial class User
     public virtual Buyer? Buyer { get; set; }
 
     public virtual Seller? Seller { get; set; }
-
-    public virtual ICollection<AppAuthority> AuthorityNames { get; set; } = new List<AppAuthority>();
 }

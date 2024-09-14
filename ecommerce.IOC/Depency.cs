@@ -1,14 +1,12 @@
-﻿using ecommerce.DAL.Repository;
+﻿using ecommerce.BLL.Servicios;
+using ecommerce.BLL.Servicios.Contrato;
+using ecommerce.DAL;
+using ecommerce.DAL.Repository;
 using ecommerce.DAL.Repository.Contrato;
-using ecommerce.MODEL;
+//using ecommerce.MODEL;
 using ecommerce.UTILIY;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ecommerce.IOC
 {
@@ -31,10 +29,11 @@ namespace ecommerce.IOC
                 options.UseSqlServer(connectionString);
             });
 
-
+            // Registrar servicios y repositorios
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserServices, UserService>();
 
+            // Registrar AutoMapper
             services.AddAutoMapper(typeof(AutoMapperProfile));
         }
     }

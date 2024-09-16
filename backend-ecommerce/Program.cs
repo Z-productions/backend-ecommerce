@@ -1,25 +1,21 @@
 using DotNetEnv;
-using ecommerce.DAL.Repository;
-using ecommerce.DAL.Repository.Contrato;
 using ecommerce.IOC;
-using ecommerce.UTILIY;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Cargar variables del archivo .env
 Env.Load();
 
-// Add services to the container.
-
+// Agregar servicios al contenedor
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Inyeccion dependecia acorde con la dependencia 
+// Inyección de dependencias
 builder.Services.InyectionDependecy();
- 
-
+builder.Services.InyectionDependcyJwt();
+builder.Services.InyectionAddCustomSwaggerGen();
+builder.Services.InyectionAddCors();
 
 var app = builder.Build();
 
@@ -30,11 +26,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("AllowAll");
 
 app.MapControllers();
-
 app.Run();

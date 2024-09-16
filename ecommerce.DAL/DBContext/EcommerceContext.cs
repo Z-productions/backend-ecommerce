@@ -285,7 +285,7 @@ public partial class EcommerceContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("login");
             entity.Property(e => e.Password)
-                .HasMaxLength(60)
+                .HasMaxLength(256)
                 .IsUnicode(false)
                 .HasColumnName("password");
         });

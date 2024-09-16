@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using backend_ecommerce.Response;
 using ecommerce.BLL.Servicios.Contrato;
+using Microsoft.AspNetCore.Authorization;
+using ecommerce.DTO.Login;
 
 
 namespace backend_ecommerce.Controllers
@@ -13,13 +15,13 @@ namespace backend_ecommerce.Controllers
     {
         private readonly IUserServices userService;
 
+
         public UserController(IUserServices userService)
         {
             this.userService = userService;
         }
 
-        [HttpPost]
-        [Route("create/user")]
+        [HttpPost("create/user")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
             var respuesta = new Response<List<RegisterUserDto>>();
@@ -71,6 +73,84 @@ namespace backend_ecommerce.Controllers
                 respuesta.Status = false;
                 respuesta.Message = "Se produjo un error inesperado: " + ex.Message;
                 return StatusCode(StatusCodes.Status500InternalServerError, respuesta);  // Retorna 500 Internal Server Error
+            }
+        }
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto model)
+        {
+            var respuesta = new Response<LoginResponseDto>(); // Aquí usa LoginResponseDto, no LoginDto
+            try
+            {
+                // Llama al servicio para autenticar al usuario y obtener el token
+                var loginResult = await userService.LoginDtos(model);
+
+                // Verifica si el resultado es nulo o no se ha generado el token
+                if (loginResult == null || string.IsNullOrEmpty(loginResult.Token))
+                {
+                    respuesta.Status = false;
+                    respuesta.Message = "Credenciales inválidas.";
+                    return BadRequest(respuesta);  // Retorna 400 BadRequest si no es exitoso
+                }
+
+                // Si las credenciales son válidas, devuelve el login y el token
+                respuesta.Status = true;
+                respuesta.Data = loginResult; // Asegúrate de que loginResult sea de tipo LoginResponseDto
+                respuesta.Message = "Login exitoso";
+
+                return Ok(respuesta);  // Retorna 200 OK con el token y los datos del usuario
+            }
+            catch (ArgumentException ex)
+            {
+                // Maneja los errores de credenciales inválidas
+                respuesta.Status = false;
+                respuesta.Message = ex.Message;
+                return BadRequest(respuesta);  // Retorna 400 BadRequest si hay error de credenciales
+            }
+            catch (ApplicationException ex)
+            {
+                // Maneja errores en el servicio
+                respuesta.Status = false;
+                respuesta.Message = ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);  // Retorna 500 si hay un error interno
+            }
+            catch (Exception ex)
+            {
+                // Captura cualquier otra excepción inesperada
+                respuesta.Status = false;
+                respuesta.Message = "Se produjo un error inesperado: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);  // Retorna 500 por error inesperado
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("delete/{userId}")]
+        public async Task<IActionResult> DeleteUser(long userId)
+        {
+            var respuesta = new Response<bool>();
+
+            try
+            {
+                // Elimina el usuario usando el servicio
+                var result = await userService.DeleteUser(userId);
+
+                respuesta.Status = result;
+                respuesta.Message = result ? "Usuario eliminado exitosamente" : "No se pudo eliminar el usuario";
+
+                return result ? Ok(respuesta) : NotFound(respuesta);
+            }
+            catch (ApplicationException ex)
+            {
+                respuesta.Status = false;
+                respuesta.Message = ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Status = false;
+                respuesta.Message = "Se produjo un error inesperado: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
             }
         }
     }

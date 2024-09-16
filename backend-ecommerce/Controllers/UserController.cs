@@ -5,6 +5,7 @@ using backend_ecommerce.Response;
 using ecommerce.BLL.Servicios.Contrato;
 using Microsoft.AspNetCore.Authorization;
 using ecommerce.DTO.Login;
+using ecommerce.DTO.Common;
 
 
 namespace backend_ecommerce.Controllers
@@ -76,7 +77,6 @@ namespace backend_ecommerce.Controllers
             }
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
@@ -124,6 +124,54 @@ namespace backend_ecommerce.Controllers
             }
         }
 
+        [HttpGet("get/user/{name}")]
+        public async Task<IActionResult> GetLoginName(string name)
+        {
+            var respuesta = new Response<List<RegisterUserDto>>();
+
+            try
+            {
+                // Llama al servicio para obtener los usuarios cuyo Login contiene el nombre proporcionado
+                var usuarios = await userService.GetLoginName(name);
+
+                // Si no se encuentran usuarios, devuelve un mensaje adecuado
+                if (usuarios == null || !usuarios.Any())
+                {
+                    respuesta.Status = false;
+                    respuesta.Message = "No se encontraron usuarios con el nombre proporcionado.";
+                    return NotFound(respuesta);  // Retorna 404 NotFound si no hay resultados
+                }
+
+                // Si se encuentran usuarios, retorna la lista
+                respuesta.Status = true;
+                respuesta.Data = usuarios;
+                respuesta.Message = "Usuarios encontrados con éxito";
+
+                return Ok(respuesta);  // Retorna 200 OK con los usuarios encontrados
+            }
+            catch (ArgumentException ex)
+            {
+                // Maneja los errores de argumentos inválidos
+                respuesta.Status = false;
+                respuesta.Message = ex.Message;
+                return BadRequest(respuesta);  // Retorna 400 BadRequest
+            }
+            catch (ApplicationException ex)
+            {
+                // Maneja errores de aplicación
+                respuesta.Status = false;
+                respuesta.Message = ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);  // Retorna 500 si hay un error interno
+            }
+            catch (Exception ex)
+            {
+                // Captura cualquier otra excepción inesperada
+                respuesta.Status = false;
+                respuesta.Message = "Se produjo un error inesperado: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);  // Retorna 500 por error inesperado
+            }
+        }
+        
         [Authorize]
         [HttpDelete("delete/{userId}")]
         public async Task<IActionResult> DeleteUser(long userId)
@@ -150,6 +198,66 @@ namespace backend_ecommerce.Controllers
             {
                 respuesta.Status = false;
                 respuesta.Message = "Se produjo un error inesperado: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
+            }
+        }
+
+        [HttpGet("get/users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var respuesta = new Response<List<UserDto>>();
+
+            try
+            {
+                var users = await userService.GetUserDtos();
+
+                respuesta.Status = true;
+                respuesta.Data = users;
+                respuesta.Message = "Usuarios obtenidos exitosamente";
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Status = false;
+                respuesta.Message = "Error al obtener los usuarios: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("update/user")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserDto userDto)
+        {
+            var respuesta = new Response<UserDto>();
+
+            try
+            {
+                if (userDto == null)
+                {
+                    respuesta.Status = false;
+                    respuesta.Message = "Los datos proporcionados no son válidos.";
+                    return BadRequest(respuesta);
+                }
+
+                var updatedUser = await userService.UpdateUser(userDto);
+
+                if (updatedUser == null)
+                {
+                    respuesta.Status = false;
+                    respuesta.Message = "No se pudo actualizar el usuario.";
+                    return NotFound(respuesta);
+                }
+
+                respuesta.Status = true;
+                respuesta.Message = "Usuario actualizado exitosamente";
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Status = false;
+                respuesta.Message = "Error al actualizar el usuario: " + ex.Message;
                 return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
             }
         }

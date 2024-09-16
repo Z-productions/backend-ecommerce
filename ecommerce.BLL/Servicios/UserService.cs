@@ -7,6 +7,7 @@ using ecommerce.DTO.Common;
 using ecommerce.DTO.Login;
 using ecommerce.DTO.Registration;
 using ecommerce.MODEL;
+using System.Xml.Linq;
 
 namespace ecommerce.BLL.Servicios
 {
@@ -82,7 +83,7 @@ namespace ecommerce.BLL.Servicios
             try
             {
                 var users = await userRepository.GetAllAsync();
-                return users.Select(user => mapper.Map<UserDto>(user)).ToList();
+                return mapper.Map<List<UserDto>>(users);
             }
             catch (Exception ex)
             {
@@ -109,10 +110,16 @@ namespace ecommerce.BLL.Servicios
             try
             {
                 // Buscar el usuario con el login y la contraseña encriptada
-                var users = await userRepository.FindAsync(u => u.Login == model.Login && u.Password == model.Password.EncryptPassword());
+                var users = await userRepository.FindAsync(u => u.Login == model.Login);
                 var user = users.FirstOrDefault();
 
                 if (user == null)
+                {
+                    throw new ArgumentException("Credenciales inválidas.");
+                }
+
+                // Verificar la contraseña proporcionada contra el hash almacenado
+                if (!model.Password.VerifyPassword(user.Password))
                 {
                     throw new ArgumentException("Credenciales inválidas.");
                 }
@@ -157,7 +164,7 @@ namespace ecommerce.BLL.Servicios
         }
 
         // Actualizar usuario
-        public async Task<UserDto> UpdateUser(UserDto model)
+        public async Task<bool> UpdateUser(UserDto model)
         {
             try
             {
@@ -168,10 +175,45 @@ namespace ecommerce.BLL.Servicios
                     throw new ApplicationException("El usuario no existe.");
                 }
 
-                existingUser = mapper.Map(model, existingUser);
-                var updatedUser = await userRepository.UpdateAsync(existingUser);
+                // Verificar si la contraseña ha cambiado
+                if (!string.Equals(existingUser.Password, model.Password, StringComparison.OrdinalIgnoreCase))
+                {
+                    existingUser.Password = model.Password.EncryptPassword();
+                }
 
-                return mapper.Map<UserDto>(updatedUser);
+                // Actualizar otros campos solo si han sido modificados
+                if (!string.Equals(existingUser.FirstName, model.FirstName, StringComparison.OrdinalIgnoreCase))
+                {
+                    existingUser.FirstName = model.FirstName;
+                }
+
+                if (!string.Equals(existingUser.LastName, model.LastName, StringComparison.OrdinalIgnoreCase))
+                {
+                    existingUser.LastName = model.LastName;
+                }
+
+                if (!string.Equals(existingUser.Email, model.Email, StringComparison.OrdinalIgnoreCase))
+                {
+                    existingUser.Email = model.Email;
+                }
+
+                // Validar y actualizar la URL de la imagen si ha cambiado
+                if (!string.IsNullOrEmpty(model.ImageUrl) && !existingUser.ImageUrl.IsValidUrl())
+                {
+                    throw new ArgumentException("La URL de la imagen proporcionada no es válida. Por favor, verifique que sea una dirección URL correcta.");
+                }
+                else if (!string.Equals(existingUser.ImageUrl, model.ImageUrl))
+                {
+                    existingUser.ImageUrl = model.ImageUrl;
+                }
+
+                // Actualizar el estado de activación
+                existingUser.Activated = model.Activated;
+
+                // Actualizar el usuario en la base de datos
+                await userRepository.UpdateAsync(existingUser);
+
+                return true;
             }
             catch (Exception ex)
             {

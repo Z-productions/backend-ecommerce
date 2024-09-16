@@ -22,7 +22,7 @@ namespace ecommerce.BLL.Servicios.Contrato
         Task<bool> DeleteUser(long userId);
 
         // Actualizar usuario
-        Task<UserDto> UpdateUser(UserDto model);
+        Task<bool> UpdateUser(UserDto model);
 
     }
 }

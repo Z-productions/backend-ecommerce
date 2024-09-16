@@ -1,9 +1,4 @@
-﻿using ecommerce.DTO.Registration;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace ecommerce.BLL.ExtensionMetodos
+﻿namespace ecommerce.BLL.ExtensionMetodos
 {
     public static class ExtensionMetodos
     {
@@ -38,12 +33,18 @@ namespace ecommerce.BLL.ExtensionMetodos
             if (string.IsNullOrWhiteSpace(password))
                 throw new ArgumentException("La contraseña no puede estar vacía.");
 
-            using (var sha256 = SHA256.Create())
-            {
-                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return BitConverter.ToString(bytes).Replace("-", "").ToLower();
-            }
+            return BCrypt.Net.BCrypt.HashPassword(password); 
         }
+
+        // Extensión para verificar una contraseña
+        public static bool VerifyPassword(this string plainTextPassword, string hashedPassword)
+        {
+            if (string.IsNullOrWhiteSpace(plainTextPassword) || string.IsNullOrWhiteSpace(hashedPassword))
+                throw new ArgumentException("Las contraseñas no pueden estar vacías.");
+
+            return BCrypt.Net.BCrypt.Verify(plainTextPassword, hashedPassword);
+        }
+
         // Validar URL
         public static bool IsValidUrl(this string url)
         {

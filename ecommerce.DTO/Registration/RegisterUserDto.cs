@@ -14,5 +14,6 @@ namespace ecommerce.DTO.Registration
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? ImageUrl { get; set; }
+        public bool Activated { get; set; }
     }
 }

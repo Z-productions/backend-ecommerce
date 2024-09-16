@@ -8,6 +8,7 @@ namespace ecommerce.DTO.Registration
 {
     public class RegisterSellerDto
     {
+        public long UserId { get; set; }
         public long DocumentTypeId { get; set; }
         public string DocumentNumber { get; set; } = null!;
         public string Bank { get; set; } = null!;

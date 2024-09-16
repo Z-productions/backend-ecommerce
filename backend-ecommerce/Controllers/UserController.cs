@@ -30,7 +30,7 @@ namespace backend_ecommerce.Controllers
                 if (registerUserDto == null)
                 {
                     respuesta.Status = false;
-                    respuesta.Message = "Datos de usuario no válidos";
+                    respuesta.Message = "Los datos proporcionados no son válidos. Por favor, revise la información e intente nuevamente.";
                     return BadRequest(respuesta);  // Retorna 400 BadRequest
                 }
 
@@ -40,7 +40,7 @@ namespace backend_ecommerce.Controllers
                 if (usuario == null)
                 {
                     respuesta.Status = false;
-                    respuesta.Message = "Usuario no encontrado";
+                    respuesta.Message = "No se pudo crear el usuario. Inténtelo nuevamente.";
                     return NotFound(respuesta);  // Retorna 404 NotFound
                 }
 

@@ -7,6 +7,31 @@ namespace ecommerce.BLL.ExtensionMetodos
 {
     public static class ExtensionMetodos
     {
+        // Validar campos vacíos o todos los campos vacíos
+        public static void ValidateDto<T>(this T dto, params string[] propertiesToIgnore) where T : class
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto), "El objeto DTO no puede ser nulo.");
+
+            var type = typeof(T);
+            var properties = type.GetProperties();
+
+            foreach (var property in properties)
+            {
+                // Verificar si la propiedad debe ser ignorada en la validación
+                if (propertiesToIgnore.Contains(property.Name))
+                    continue;
+
+                var value = property.GetValue(dto) as string;
+
+                // Verificar campos vacíos
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException($"{property.Name} no puede estar vacío.");
+                }
+            }
+        }
+
         // Encriptación de contraseña
         public static string EncryptPassword(this string password)
         {
@@ -22,6 +47,12 @@ namespace ecommerce.BLL.ExtensionMetodos
         // Validar URL
         public static bool IsValidUrl(this string url)
         {
+            // Verificar si la URL es nula o vacía
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return true;
+            }
+
             if (Uri.TryCreate(url, UriKind.Absolute, out var uriResult))
             {
                 return uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps;
@@ -29,38 +60,6 @@ namespace ecommerce.BLL.ExtensionMetodos
             return false;
         }
 
-        // Validar campos vacíos o todos los campos vacíos
-        public static void ValidateDto<T>(this T dto, bool validateAllFieldsEmpty = false) where T : class
-        {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto), "El formulario no puede estar vacío. Por favor, complete los campos.");
-
-            var type = typeof(T);
-            var properties = type.GetProperties();
-
-            bool allFieldsEmpty = true;
-
-            foreach (var property in properties)
-            {
-                var value = property.GetValue(dto) as string;
-
-                // Verificar si el campo es string y está vacío
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    allFieldsEmpty = false;  // Si al menos un campo tiene valor, no están todos vacíos
-                }
-                else if (validateAllFieldsEmpty == false && string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentException($"El campo '{property.Name}' es obligatorio. Por favor, complete este campo.");
-                }
-            }
-
-            // Si se especifica validar si todos los campos están vacíos
-            if (validateAllFieldsEmpty && allFieldsEmpty)
-            {
-                throw new ArgumentException("No ha completado ningún campo. Por favor, rellene al menos uno.");
-            }
-        }
         // Validar formato de correo electrónico
         public static bool IsValidEmail(this string email)
         {

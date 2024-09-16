@@ -29,24 +29,36 @@ namespace ecommerce.BLL.ExtensionMetodos
             return false;
         }
 
-        // Validar campos vacíos
-        public static void ValidateDto<T>(this T dto) where T : class
+        // Validar campos vacíos o todos los campos vacíos
+        public static void ValidateDto<T>(this T dto, bool validateAllFieldsEmpty = false) where T : class
         {
             if (dto == null)
-                throw new ArgumentNullException(nameof(dto), "El objeto DTO no puede ser nulo.");
+                throw new ArgumentNullException(nameof(dto), "El formulario no puede estar vacío. Por favor, complete los campos.");
 
             var type = typeof(T);
             var properties = type.GetProperties();
+
+            bool allFieldsEmpty = true;
 
             foreach (var property in properties)
             {
                 var value = property.GetValue(dto) as string;
 
-                // Verificar campos vacíos
-                if (string.IsNullOrWhiteSpace(value))
+                // Verificar si el campo es string y está vacío
+                if (!string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentException($"{property.Name} no puede estar vacío.");
+                    allFieldsEmpty = false;  // Si al menos un campo tiene valor, no están todos vacíos
                 }
+                else if (validateAllFieldsEmpty == false && string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException($"El campo '{property.Name}' es obligatorio. Por favor, complete este campo.");
+                }
+            }
+
+            // Si se especifica validar si todos los campos están vacíos
+            if (validateAllFieldsEmpty && allFieldsEmpty)
+            {
+                throw new ArgumentException("No ha completado ningún campo. Por favor, rellene al menos uno.");
             }
         }
         // Validar formato de correo electrónico

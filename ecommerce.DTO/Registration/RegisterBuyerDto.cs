@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ecommerce.DTO.Registration
+﻿namespace ecommerce.DTO.Registration
 {
     public class RegisterBuyerDto
     {
+        public long UserId {  get; set; }   
         public long DocumentTypeId { get; set; }
         public string Phone { get; set; } = null!;
         public string Address { get; set; } = null!;

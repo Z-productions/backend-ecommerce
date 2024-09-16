@@ -1,5 +1,6 @@
 ﻿using ecommerce.DAL.Repository.Contrato;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace ecommerce.DAL.Repository
 {
@@ -71,32 +72,16 @@ namespace ecommerce.DAL.Repository
             }
         }
 
-        // Obtener por propiedad
-        public async Task<IEnumerable<T>> GetByPropertyAsync(string propertyName, object value)
+        // Obtener por propiedad por propiedad
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
             try
             {
-                // Obtener la propiedad a través de reflexión
-                var propertyInfo = typeof(T).GetProperty(propertyName);
-
-                if (propertyInfo == null)
-                {
-                    throw new ArgumentException($"La propiedad '{propertyName}' no existe en el tipo '{typeof(T).Name}'");
-                }
-
-                // Convertir la lista a memoria 
-                var allEntity = await ecommerceContext.Set<T>().ToListAsync();
-
-                // Filtrar usando LINQ
-                return allEntity.Where(Entity =>
-                {
-                    var propety = propertyInfo.GetValue(Entity);
-                    return propety != null && propety.Equals(value);
-                });
+                return await ecommerceContext.Set<T>().Where(predicate).ToListAsync();
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error al obtener entidades por la propiedad '{propertyName}': {ex.Message}", ex);
+                throw new Exception($"Error al buscar las entidades: {ex.Message}", ex);
             }
         }
 

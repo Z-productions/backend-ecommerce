@@ -74,5 +74,11 @@
                 return false;
             }
         }
+
+        // Método de extensión para verificar si una cadena solo contiene números
+        public static bool IsNumeric(this string value)
+        {
+            return value.All(char.IsDigit);
+        }
     }
 }

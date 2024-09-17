@@ -18,7 +18,8 @@ namespace backend_ecommerce.Controllers
             this.documentTypeService = documentTypeService;
         }
 
-        [HttpGet("GetAllDocumentTypes")]
+        // GET: api/documenttypes
+        [HttpGet]
         public async Task<IActionResult> GetAllDocumentTypes()
         {
             var respuesta = new Response<List<DocumentTypeDto>>();
@@ -59,8 +60,8 @@ namespace backend_ecommerce.Controllers
             }
         }
 
-        // Obtener un tipo de documento por nombre
-        [HttpGet("GetDocumentTypeByName/{name}")]
+        // GET: api/documenttypes/{name}
+        [HttpGet("{name}")]
         public async Task<IActionResult> GetDocumentTypeByName(string name)
         {
             var respuesta = new Response<DocumentTypeDto>(); 

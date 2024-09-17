@@ -15,14 +15,13 @@ namespace backend_ecommerce.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserServices userService;
-
-
         public UserController(IUserServices userService)
         {
             this.userService = userService;
         }
 
-        [HttpPost("create/user")]
+        // POST: api/user/register
+        [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
             var respuesta = new Response<List<RegisterUserDto>>();
@@ -77,6 +76,7 @@ namespace backend_ecommerce.Controllers
             }
         }
 
+        // POST: api/user/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
@@ -124,7 +124,8 @@ namespace backend_ecommerce.Controllers
             }
         }
 
-        [HttpGet("get/user/{name}")]
+        // GET: api/user/{name}
+        [HttpGet("{name}")]
         public async Task<IActionResult> GetLoginName(string name)
         {
             var respuesta = new Response<List<RegisterUserDto>>();
@@ -171,9 +172,33 @@ namespace backend_ecommerce.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, respuesta);  // Retorna 500 por error inesperado
             }
         }
-        
-        [Authorize]
-        [HttpDelete("delete/{userId}")]
+
+        // GET: api/user
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var respuesta = new Response<List<UserDto>>();
+
+            try
+            {
+                var users = await userService.GetUserDtos();
+
+                respuesta.Status = true;
+                respuesta.Data = users;
+                respuesta.Message = "Usuarios obtenidos exitosamente";
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Status = false;
+                respuesta.Message = "Error al obtener los usuarios: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
+            }
+        }
+
+        // DELETE: api/user/{userId}
+        [HttpDelete("{userId}"), Authorize]
         public async Task<IActionResult> DeleteUser(long userId)
         {
             var respuesta = new Response<bool>();
@@ -202,31 +227,8 @@ namespace backend_ecommerce.Controllers
             }
         }
 
-        [HttpGet("get/users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            var respuesta = new Response<List<UserDto>>();
-
-            try
-            {
-                var users = await userService.GetUserDtos();
-
-                respuesta.Status = true;
-                respuesta.Data = users;
-                respuesta.Message = "Usuarios obtenidos exitosamente";
-
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Status = false;
-                respuesta.Message = "Error al obtener los usuarios: " + ex.Message;
-                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
-            }
-        }
-
-        [Authorize]
-        [HttpPut("update/user")]
+        // PUT: api/user/update
+        [HttpPut("update"), Authorize]
         public async Task<IActionResult> UpdateUser([FromBody] UserDto userDto)
         {
             var respuesta = new Response<UserDto>();

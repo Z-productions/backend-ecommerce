@@ -37,6 +37,7 @@ namespace ecommerce.IOC
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserServices, UserService>();
             services.AddScoped<IDocumentTypeService, DocumentTypeService>();
+            services.AddScoped<IBuyerService, BuyerService>();
 
             // Registrar AutoMapper
             services.AddAutoMapper(typeof(AutoMapperProfile));

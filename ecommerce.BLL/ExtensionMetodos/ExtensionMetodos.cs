@@ -17,10 +17,15 @@
                 if (propertiesToIgnore.Contains(property.Name))
                     continue;
 
-                var value = property.GetValue(dto) as string;
+                var value = property.GetValue(dto) ;
+
+                if (value == null)
+                {
+                    throw new ArgumentException($"{property.Name} no puede ser nulo.");
+                }
 
                 // Verificar campos vacíos
-                if (string.IsNullOrWhiteSpace(value))
+                if (value is string strValue && string.IsNullOrWhiteSpace(strValue))
                 {
                     throw new ArgumentException($"{property.Name} no puede estar vacío.");
                 }

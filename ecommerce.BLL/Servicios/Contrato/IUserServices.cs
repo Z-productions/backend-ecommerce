@@ -23,6 +23,5 @@ namespace ecommerce.BLL.Servicios.Contrato
 
         // Actualizar usuario
         Task<bool> UpdateUser(UserDto model);
-
     }
 }

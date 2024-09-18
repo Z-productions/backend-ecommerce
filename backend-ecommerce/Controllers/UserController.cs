@@ -244,7 +244,7 @@ namespace backend_ecommerce.Controllers
 
                 var updatedUser = await userService.UpdateUser(userDto);
 
-                if (updatedUser == null)
+                if (!updatedUser)
                 {
                     respuesta.Status = false;
                     respuesta.Message = "No se pudo actualizar el usuario.";

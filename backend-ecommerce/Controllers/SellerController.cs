@@ -11,32 +11,31 @@ namespace backend_ecommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BuyerController : ControllerBase
+    public class SellerController : ControllerBase
     {
-        private readonly IBuyerService buyerService;
-
-        public BuyerController(IBuyerService buyerService)
+        private readonly ISellerService sellerService;
+        public SellerController(ISellerService sellerService)
         {
-            this.buyerService = buyerService;
+            this.sellerService = sellerService;
         }
 
-        // POST: api/Buyer/create
+        // POST: api/Seller/create
         [HttpPost("create")]
-        public async Task<IActionResult> RegisterBuyer([FromBody] RegisterBuyerDto registerBuyerDto)
+        public async Task<IActionResult> RegisterSeller([FromBody] RegisterSellerDto registerSellerDto)
         {
-            var respuesta = new Response<RegisterBuyerDto>();
+            var respuesta = new Response<RegisterSellerDto>();
 
             try
             {
                 // Validar si el DTO es válido
-                if (registerBuyerDto == null)
+                if (registerSellerDto == null)
                 {
                     respuesta.Status = false;
                     respuesta.Message = "Los datos proporcionados no son válidos. Por favor, revise la información e intente nuevamente.";
                     return BadRequest(respuesta); // Retorna 400 BadRequest
                 }
 
-                var buyer = await buyerService.CreateBuyer(registerBuyerDto);
+                var buyer = await sellerService.CreateSeller(registerSellerDto);
 
                 // Si el comprador no pudo ser creado, retorna un 404 NotFound
                 if (buyer == null)
@@ -76,23 +75,23 @@ namespace backend_ecommerce.Controllers
             }
         }
 
-        // PUT: api/Buyer/update
+        // PUT: api/Seller/update
         [HttpPut("update"), Authorize]
-        public async Task<IActionResult> UpdateBuyer([FromBody] BuyerDto updateBuyerDto)
+        public async Task<IActionResult> UpdateSeller([FromBody] SellerDto updateSellerDto)
         {
             var respuesta = new Response<BuyerDto>();
 
             try
             {
                 // Validar si el DTO es válido
-                if (updateBuyerDto == null)
+                if (updateSellerDto == null)
                 {
                     respuesta.Status = false;
                     respuesta.Message = "Los datos proporcionados no son válidos. Por favor, revise la información e intente nuevamente.";
                     return BadRequest(respuesta); // Retorna 400 BadRequest
                 }
 
-                var buyer = await buyerService.UpdateBuyer(updateBuyerDto);
+                var buyer = await sellerService.UpdateSeller(updateSellerDto);
 
                 // Si el comprador no pudo ser actualizado, retorna un 404 NotFound
                 if (!buyer)
@@ -131,16 +130,16 @@ namespace backend_ecommerce.Controllers
             }
         }
 
-        // DELETE: api/Buyer/delete/5
+        // DELETE: api/Seller/delete/5
         [HttpDelete("delete/{id}"), Authorize]
-        public async Task<IActionResult> DeleteBuyer(long id)
+        public async Task<IActionResult> DeleteSeller(long id)
         {
             var respuesta = new Response<bool>();
 
             try
             {
                 // Elimina el comprador usando el servicio
-                var result = await buyerService.DeleteBuyer(id);
+                var result = await sellerService.DeleteSeller(id);
 
                 respuesta.Status = result;
                 respuesta.Message = result ? "Comprador eliminado exitosamente" : "No se pudo eliminar el comprador";

@@ -7,10 +7,10 @@ namespace ecommerce.BLL.Servicios.Contrato
     {
         // Crear vendedor
         Task<RegisterSellerDto> CreateSeller(RegisterSellerDto model);
+        // Eliminar vendedor
+        Task<bool> DeleteSeller(long sellerId);
         // Actualizar vendedor
-        Task<bool> UpdateSeller(long sellerId);
-        // Actualizar comprador
-        Task<bool> UpdateBuyer(SellerDto sellerDto);
+        Task<bool> UpdateSeller(SellerDto sellerDto);
     }
 }
 

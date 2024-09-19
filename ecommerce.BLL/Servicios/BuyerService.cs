@@ -22,7 +22,6 @@ namespace ecommerce.BLL.Servicios
         }
 
 
-
         // Crear comprador
         public async Task<RegisterBuyerDto> CreateBuyer(RegisterBuyerDto model)
         {

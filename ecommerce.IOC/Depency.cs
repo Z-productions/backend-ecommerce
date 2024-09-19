@@ -38,6 +38,7 @@ namespace ecommerce.IOC
             services.AddScoped<IUserServices, UserService>();
             services.AddScoped<IDocumentTypeService, DocumentTypeService>();
             services.AddScoped<IBuyerService, BuyerService>();
+            services.AddScoped<ISellerService, SellerService>();
 
             // Registrar AutoMapper
             services.AddAutoMapper(typeof(AutoMapperProfile));

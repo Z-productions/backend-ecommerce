@@ -63,12 +63,12 @@ namespace ecommerce.BLL.Servicios
                 }
 
                 // Mapear el DTO al modelo y agregarlo
-                var buyer = mapper.Map<Seller>(model);
-                var buyerCreate = await sellerRepository.AddAsync(buyer);
+                var seller = mapper.Map<Seller>(model);
+                var sellerCreate = await sellerRepository.AddAsync(seller);
 
 
                 // Retornar el DTO del comprador creado
-                return mapper.Map<RegisterSellerDto>(buyerCreate);
+                return mapper.Map<RegisterSellerDto>(sellerCreate);
             }
             catch (TaskCanceledException ex)
             {

@@ -21,7 +21,6 @@ namespace ecommerce.BLL.Servicios
             this.mapper = mapper;
         }
 
-
         // Crear comprador
         public async Task<RegisterBuyerDto> CreateBuyer(RegisterBuyerDto model)
         {

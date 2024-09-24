@@ -12,9 +12,6 @@ namespace ecommerce.UTILIY
             // Mapeo para registrar usuario
             CreateMap<User, RegisterUserDto>().ReverseMap();
 
-            // Mapeo para mostrar usuario
-            CreateMap<User, UserDto>().ReverseMap();
-
             // Mapeo para registrar comprador
             CreateMap<Buyer, RegisterBuyerDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))  // Mapeo de UserId
@@ -27,8 +24,18 @@ namespace ecommerce.UTILIY
                 .ForMember(dest => dest.DocumentTypeId, opt => opt.MapFrom(src => src.DocumentTypeId))  // Mapeo de DocumentTypeId
                 .ReverseMap();
 
-            // Mapeo para registrar tipo de documento
+            // Mapeo para mostrar Dto
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Buyer, BuyerDto>().ReverseMap();
+            CreateMap<Seller, SellerDto>().ReverseMap();
             CreateMap<DocumentType, DocumentTypeDto>().ReverseMap();
+
+
+
+            // Mapeo para traer el numero del docuemnto del Vendedor
+            CreateMap<Seller, SellerWithUserDto>()
+                .ForMember(dest => dest.UserDto, opt => opt.MapFrom(src => src.User))
+                .ForMember(dest => dest.SellerDto, opt => opt.MapFrom(src => src));
 
             // Mapeo para registrar productos
             CreateMap<Product, RegisterProduct>()

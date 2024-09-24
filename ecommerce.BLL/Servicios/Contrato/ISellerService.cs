@@ -11,6 +11,8 @@ namespace ecommerce.BLL.Servicios.Contrato
         Task<bool> DeleteSeller(long sellerId);
         // Actualizar vendedor
         Task<bool> UpdateSeller(SellerDto sellerDto);
+        // Traer numero de cedula de la persona
+        Task<SellerWithUserDto> GetSellerWithUserInfoByDocumentNumber(string documentNumber);
     }
 }
 

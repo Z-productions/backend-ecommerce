@@ -63,8 +63,13 @@ namespace ecommerce.DAL.Repository
             {
                 var entity = await ecommerceContext.Set<T>().FindAsync(id);
 
-                // Devuelve un nuevo objeto de tipo T si la entidad es nula
-                return entity ?? Activator.CreateInstance<T>();
+                // Verificar si se encontró la entidad
+                if (entity == null)
+                {
+                    throw new KeyNotFoundException($"No se encontró la entidad con ID: {id}");
+                }
+
+                return entity;
             }
             catch (Exception ex)
             {

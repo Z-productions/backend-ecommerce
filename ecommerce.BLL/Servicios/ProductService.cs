@@ -24,7 +24,7 @@ namespace ecommerce.BLL.Servicios
             try
             {
                 // Validar el DTO usando el método de extensión (campos vacíos)
-                model.ValidateDto();
+                model.ValidateDto("UrlImage");
 
                 // Validar que el número del precio contenga solo números
                 if (!string.IsNullOrEmpty(model.Price) &&!model.Price.IsNumeric())
@@ -38,12 +38,12 @@ namespace ecommerce.BLL.Servicios
                     throw new ArgumentException("El número del stock debe contener únicamente dígitos.");
                 }
 
+
                 // Validar la URL de la imagen
                 if (!string.IsNullOrEmpty(model.UrlImage) && !model.UrlImage.IsValidUrl())
                 {
                     throw new ArgumentException("La URL de la imagen proporcionada no es válida. Por favor, verifique que sea una dirección URL correcta.");
                 }
-
                
                 // Mapear el DTO al modelo y agregarlo
                 var product = mapper.Map<Product>(model);
@@ -75,7 +75,7 @@ namespace ecommerce.BLL.Servicios
             {
                 var productToDelete = await productRepository.GetByIdAsync(productId);
 
-                if (productId == null)
+                if (productToDelete == null)
                 {
                     throw new ApplicationException("El producto no existe.");
                 }
@@ -86,6 +86,19 @@ namespace ecommerce.BLL.Servicios
             catch (Exception ex)
             {
                 throw new ApplicationException("Error al eliminar el usuario: " + ex.Message, ex);
+            }
+        }
+
+        public async Task<List<ProductDto>> GetProduct()
+        {
+            try
+            {
+                var product = await productRepository.GetAllAsync();
+                return mapper.Map<List<ProductDto>>(product);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al obtener los usuarios: " + ex.Message, ex);
             }
         }
 

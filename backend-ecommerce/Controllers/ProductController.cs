@@ -1,4 +1,5 @@
 ﻿using backend_ecommerce.Response;
+using ecommerce.BLL.Servicios;
 using ecommerce.BLL.Servicios.Contrato;
 using ecommerce.DTO.Common;
 using ecommerce.DTO.Registration;
@@ -70,6 +71,30 @@ namespace backend_ecommerce.Controllers
                 respuesta.Status = false;
                 respuesta.Message = "Se produjo un error inesperado: " + ex.Message;
                 return StatusCode(StatusCodes.Status500InternalServerError, respuesta); // Retorna 500 Internal Server Error
+            }
+        }
+
+        // GET: api/product
+        [HttpGet]
+        public async Task<IActionResult> GetProduct()
+        {
+            var respuesta = new Response<List<ProductDto>>();
+
+            try
+            {
+                var users = await productService.GetProduct();
+
+                respuesta.Status = true;
+                respuesta.Data = users;
+                respuesta.Message = "Productos obtenidos exitosamente";
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Status = false;
+                respuesta.Message = "Error al obtener los productos: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta);
             }
         }
 

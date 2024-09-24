@@ -11,5 +11,7 @@ namespace ecommerce.BLL.Servicios.Contrato
         Task<bool> DeleteProduct(long productId);
         // Actualizar producto
         Task<bool> UpdateProduct(ProductDto productDto);
+        // Traer producto
+        Task<List<ProductDto>> GetProduct();
     }
 }

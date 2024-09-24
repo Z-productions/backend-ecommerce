@@ -29,7 +29,7 @@ namespace ecommerce.UTILIY
             CreateMap<Buyer, BuyerDto>().ReverseMap();
             CreateMap<Seller, SellerDto>().ReverseMap();
             CreateMap<DocumentType, DocumentTypeDto>().ReverseMap();
-
+            CreateMap<Product, ProductDto>().ReverseMap();
 
 
             // Mapeo para traer el numero del docuemnto del Vendedor

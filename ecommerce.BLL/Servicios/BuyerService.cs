@@ -1,22 +1,26 @@
 ﻿using AutoMapper;
 using ecommerce.BLL.ExtensionMetodos;
 using ecommerce.BLL.Servicios.Contrato;
+using ecommerce.DAL;
 using ecommerce.DAL.Repository.Contrato;
 using ecommerce.DTO.Common;
 using ecommerce.DTO.Registration;
 using ecommerce.MODEL;
+using Microsoft.EntityFrameworkCore;
 
 namespace ecommerce.BLL.Servicios
 {
     public class BuyerService : IBuyerService
     {
         private readonly IGenericRepository<Buyer> buyerRepository;
+        private readonly IGenericRepository<User> userRepository;
         private readonly IGenericRepository<DocumentType> documentTypeRepository;
         private readonly IMapper mapper;
 
-        public BuyerService(IGenericRepository<Buyer> buyerRepository, IGenericRepository<DocumentType> documentTypeRepository, IMapper mapper)
+        public BuyerService(IGenericRepository<Buyer> buyerRepository, IGenericRepository<User> userRepository, IGenericRepository<DocumentType> documentTypeRepository, IMapper mapper)
         {
             this.buyerRepository = buyerRepository;
+            this.userRepository = userRepository;
             this.documentTypeRepository = documentTypeRepository;
             this.mapper = mapper;
         }
@@ -61,14 +65,14 @@ namespace ecommerce.BLL.Servicios
 
                 // Validar si el comprador con este número de documento ya existe (evitar duplicados)
                 var existingBuyer = await buyerRepository.FindAsync(document => model.DocumentNumber == model.DocumentNumber);
-               
+
                 if (existingBuyer.Any())
                 {
                     throw new ArgumentException("Ya existe un comprador registrado con este número de documento.");
                 }
 
                 // Mapear el DTO al modelo y agregarlo
-                var buyer = mapper.Map<Buyer>(model);  
+                var buyer = mapper.Map<Buyer>(model);
                 var buyerCreate = await buyerRepository.AddAsync(buyer);
 
 
@@ -116,13 +120,61 @@ namespace ecommerce.BLL.Servicios
             {
                 // Mensaje específico para errores de validación
                 throw new ApplicationException($"Error: {ex.Message}");
-            }
+            }   
             catch (Exception ex)
             {
                 // Mensaje genérico para cualquier otro tipo de excepción
                 throw new ApplicationException($"Ocurrió un error inesperado al intentar eliminar el comprador. Por favor, intente de nuevo más tarde. {ex.Message}");
             }
         }
+
+        public async Task<BuyerWithUserDto> GetBuyerWithUserInfoByDocumentNumber(string documentNumber)
+        {
+            try
+            {
+                // Buscar el comprador por número de documento
+                var buyer = (await buyerRepository.FindAsync(b => b.DocumentNumber == documentNumber)).FirstOrDefault();
+
+                // Verificar si se encontró el comprador
+                if (buyer == null)
+                {
+                    throw new ApplicationException("No se encontró un comprador con el número de documento proporcionado.");
+                }
+
+                // Mapear a BuyerDto
+                var buyerDto = mapper.Map<BuyerDto>(buyer);
+
+                // Obtener el UserDto relacionado
+                var user = await userRepository.GetByIdAsync(buyer.UserId);
+                if (user == null)
+                {
+                    throw new ApplicationException("No se encontró un usuario relacionado con el comprador.");
+                }
+                var userDto = mapper.Map<UserDto>(user);
+
+                // Obtener el DocumentTypeDto según el buyer.DocumentTypeId
+                var documentType = await documentTypeRepository.GetByIdAsync(buyer.DocumentTypeId);
+                if (documentType == null)
+                {
+                    throw new ApplicationException("No se encontró el tipo de documento relacionado con el comprador.");
+                }
+                var documentTypeDto = mapper.Map<DocumentTypeDto>(documentType);
+
+                // Retornar el DTO combinado
+                return new BuyerWithUserDto(userDto, buyerDto, documentTypeDto);
+            }
+            catch (ArgumentException ex)
+            {
+                // Mensaje específico para errores de validación
+                throw new ApplicationException($"Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Mensaje genérico para cualquier otro tipo de excepción
+                throw new ApplicationException($"Ocurrió un error inesperado al intentar obtener la información del comprador. Por favor, intente de nuevo más tarde. {ex.Message}");
+            }
+        }
+
 
         // Actualizar comprador
         public async Task<bool> UpdateBuyer(BuyerDto model)

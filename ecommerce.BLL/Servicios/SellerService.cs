@@ -12,10 +12,10 @@ namespace ecommerce.BLL.Servicios
     {
         private readonly IGenericRepository<Seller> sellerRepository;
         private readonly IGenericRepository<DocumentType> documentTypeRepository;
-        private readonly IGenericRepository<UserDto> userRepository;
+        private readonly IGenericRepository<User> userRepository;
         private readonly IMapper mapper;
 
-        public SellerService(IGenericRepository<Seller> sellerRepository, IGenericRepository<DocumentType> documentTypeRepository, IGenericRepository<UserDto> userRepository, IMapper mapper)
+        public SellerService(IGenericRepository<Seller> sellerRepository, IGenericRepository<DocumentType> documentTypeRepository, IGenericRepository<User> userRepository, IMapper mapper)
         {
             this.sellerRepository = sellerRepository;
             this.documentTypeRepository = documentTypeRepository;
@@ -115,6 +115,53 @@ namespace ecommerce.BLL.Servicios
             {
                 // Mensaje genérico para cualquier otro tipo de excepción
                 throw new ApplicationException($"Ocurrió un error inesperado al intentar eliminar el vendedor. Por favor, intente de nuevo más tarde. {ex.Message}");
+            }
+        }
+
+        public async Task<SellerWithUserDto> GetSellerWithUserInfoByDocumentNumber(string documentNumber)
+        {
+            try
+            {
+                // Buscar el vendedor por número de documento
+                var seller = (await sellerRepository.FindAsync(s => s.DocumentNumber == documentNumber)).FirstOrDefault();
+
+                // Verificar si se encontró el vendedor
+                if (seller == null)
+                {
+                    throw new ApplicationException("No se encontró un vendedor con el número de documento proporcionado.");
+                }
+
+                // Mapear a SellerDto
+                var sellerDto = mapper.Map<SellerDto>(seller);
+
+                // Obtener el UserDto relacionado
+                var user = await userRepository.GetByIdAsync(sellerDto.UserId);
+                if (user == null)
+                {
+                    throw new ApplicationException("No se encontró un usuario relacionado con el vendedor.");
+                }
+                var userDto = mapper.Map<UserDto>(user);
+
+                // Obtener el DocumentTypeDto según el seller.DocumentTypeId
+                var documentType = await documentTypeRepository.GetByIdAsync(seller.DocumentTypeId);
+                if (documentType == null)
+                {
+                    throw new ApplicationException("No se encontró el tipo de documento relacionado con el vendedor.");
+                }
+                var documentTypeDto = mapper.Map<DocumentTypeDto>(documentType);
+
+                // Retornar el DTO combinado
+                return new SellerWithUserDto(userDto, sellerDto, documentTypeDto);
+            }
+            catch (ArgumentException ex)
+            {
+                // Mensaje específico para errores de validación
+                throw new ApplicationException($"Error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Mensaje genérico para cualquier otro tipo de excepción
+                throw new ApplicationException($"Ocurrió un error inesperado al intentar obtener la información del vendedor. Por favor, intente de nuevo más tarde. {ex.Message}");
             }
         }
 

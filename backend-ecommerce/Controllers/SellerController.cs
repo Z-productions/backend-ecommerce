@@ -75,6 +75,62 @@ namespace backend_ecommerce.Controllers
             }
         }
 
+        // GET: api/Seller/getByDocumentNumber/{documentNumber}
+        [HttpGet("getByDocumentNumber/{documentNumber}")]
+        public async Task<IActionResult> GetSellerByDocumentNumber(string documentNumber)
+        {
+            var respuesta = new Response<SellerWithUserDto>();
+
+            try
+            {
+                // Validar que el número de documento no sea nulo o vacío
+                if (string.IsNullOrWhiteSpace(documentNumber))
+                {
+                    respuesta.Status = false;
+                    respuesta.Message = "El número de documento proporcionado no es válido.";
+                    return BadRequest(respuesta); // Retorna 400 BadRequest
+                }
+
+                var sellerWithUser = await sellerService.GetSellerWithUserInfoByDocumentNumber(documentNumber);
+
+                // Si no se encontró el vendedor, retorna un 404 NotFound
+                if (sellerWithUser == null)
+                {
+                    respuesta.Status = false;
+                    respuesta.Message = "No se encontró ningún vendedor con ese número de documento.";
+                    return NotFound(respuesta); // Retorna 404 NotFound
+                }
+
+                // Si se encontró el vendedor correctamente
+                respuesta.Status = true;
+                respuesta.Data = sellerWithUser;
+                respuesta.Message = "Vendedor encontrado exitosamente";
+
+                return Ok(respuesta); // Retornar respuesta con estado 200 OK
+            }
+            catch (ArgumentException ex)
+            {
+                // Maneja errores específicos lanzados por el servicio
+                respuesta.Status = false;
+                respuesta.Message = ex.Message;
+                return BadRequest(respuesta); // Retorna 400 BadRequest
+            }
+            catch (ApplicationException ex)
+            {
+                // Maneja excepciones genéricas lanzadas por el servicio
+                respuesta.Status = false;
+                respuesta.Message = ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta); // Retorna 500 Internal Server Error
+            }
+            catch (Exception ex)
+            {
+                // Captura cualquier otra excepción que no sea de tipo ApplicationException
+                respuesta.Status = false;
+                respuesta.Message = "Se produjo un error inesperado: " + ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, respuesta); // Retorna 500 Internal Server Error
+            }
+        }
+
         // PUT: api/Seller/update
         [HttpPut("update"), Authorize]
         public async Task<IActionResult> UpdateSeller([FromBody] SellerDto updateSellerDto)
